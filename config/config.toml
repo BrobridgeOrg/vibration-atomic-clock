@@ -1,0 +1,4 @@
+[signal_server]
+host = "127.0.0.1:32768"
+pub_channel = "ticker.time.now"
+
