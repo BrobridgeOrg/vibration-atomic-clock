@@ -2,6 +2,8 @@
 
 The built-in atomic-clock  is used to process timmer  from task manager.
 
+ha_mode maximal support 2 node.
+
 ## Update proto definition
 
 Rebuild to apply `proto` changes, just run commands below:
