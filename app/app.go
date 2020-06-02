@@ -58,8 +58,15 @@ func (a *App) Uninit() {
 }
 
 func (a *App) Run() error {
+
 	tickerService := ticker.CreateService(app.AppImpl(a))
-	tickerService.StartTicker(100) //unit: ms
+	if viper.GetBool("atomic_clock.ha_mode") {
+		log.Info("Run at high availability mode")
+		tickerService.RunTickerCluster()
+	} else {
+		log.Info("Run at single mode")
+		tickerService.StartTicker(100) //unit: ms
+	}
 
 	return nil
 }

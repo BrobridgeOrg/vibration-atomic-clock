@@ -2,3 +2,6 @@
 host = "127.0.0.1:32768"
 pub_channel = "ticker.time.now"
 
+[atomic_clock]
+ha_mode = true
+

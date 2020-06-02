@@ -6,6 +6,8 @@ import (
 
 	app "twist-atomic-clock/app/interface"
 
+	nats "github.com/nats-io/nats.go"
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 
@@ -22,6 +24,27 @@ func CreateService(a app.AppImpl) *Service {
 	}
 
 	return service
+}
+
+func (service *Service) RunTickerCluster() {
+	log.Info("Stanby ...")
+	timer := time.AfterFunc(1100*time.Millisecond,
+		func() {
+			log.Info("Is Master.")
+			service.StartTicker(100)
+		},
+	)
+
+	//subscribe queue
+	channel := viper.GetString("signal_server.pub_channel")
+	signalBus := service.app.GetSignalBus()
+	signalBus.Subscribe(
+		channel,
+		func(m *nats.Msg) {
+			//log.Info(string(m.Data))
+			timer.Reset(1100 * time.Millisecond)
+		})
+
 }
 
 func (service *Service) StartTicker(duration time.Duration) {
@@ -44,13 +67,9 @@ func (service *Service) StartTicker(duration time.Duration) {
 			signalBus := service.app.GetSignalBus()
 			signalBus.Emit(channel, []byte(strconv.FormatInt(now, 10)))
 			old = now
-			/*
-				log.WithFields(log.Fields{
-					"time_at": now,
-				}).Info("time")
-			*/
 		}
 	}
+
 }
 
 func (service *Service) StopTicker() {

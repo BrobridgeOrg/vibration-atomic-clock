@@ -74,3 +74,25 @@ func (sb *SignalBus) QueueSubscribe(channelName string, topic string, fn func(*n
 
 	return sub, nil
 }
+
+func (sb *SignalBus) Subscribe(topic string, fn func(*nats.Msg)) (*nats.Subscription, error) {
+
+	// Subscribe
+	sub, err := sb.client.Subscribe(topic, fn)
+	if err != nil {
+		return nil, err
+	}
+
+	return sub, nil
+}
+
+func (sb *SignalBus) Unsubscribe(sub *nats.Subscription) error {
+
+	// Unsubscribe
+	err := sub.Unsubscribe()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
