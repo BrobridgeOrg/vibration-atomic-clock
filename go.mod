@@ -1,4 +1,4 @@
-module twist-atomic-clock
+module timer-atomic-clock
 
 go 1.13
 

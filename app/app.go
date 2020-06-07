@@ -3,9 +3,9 @@ package app
 import (
 	"strconv"
 
-	app "twist-atomic-clock/app/interface"
-	"twist-atomic-clock/app/signalbus"
-	ticker "twist-atomic-clock/services/ticker"
+	app "timer-atomic-clock/app/interface"
+	"timer-atomic-clock/app/signalbus"
+	ticker "timer-atomic-clock/services/ticker"
 
 	log "github.com/sirupsen/logrus"
 	"github.com/sony/sonyflake"

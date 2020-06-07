@@ -6,7 +6,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 
-	app "twist-atomic-clock/app"
+	app "timer-atomic-clock/app"
 )
 
 func init() {

@@ -4,11 +4,10 @@ import (
 	"strconv"
 	"time"
 
-	app "twist-atomic-clock/app/interface"
+	app "timer-atomic-clock/app/interface"
 
 	nats "github.com/nats-io/nats.go"
 	log "github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 )
 
 type Service struct {
@@ -36,10 +35,9 @@ func (service *Service) RunTickerCluster() {
 	)
 
 	//subscribe queue
-	channel := viper.GetString("signal_server.pub_channel")
 	signalBus := service.app.GetSignalBus()
 	signalBus.Subscribe(
-		channel,
+		"timer.ticker",
 		func(m *nats.Msg) {
 			//log.Info(string(m.Data))
 			timer.Reset(1100 * time.Millisecond)
@@ -54,7 +52,6 @@ func (service *Service) StartTicker(duration time.Duration) {
 	defer service.ticker.Stop()
 
 	var old int64 = 0
-	channel := viper.GetString("signal_server.pub_channel")
 	for {
 		select {
 		case <-service.ticker.C:
@@ -65,7 +62,7 @@ func (service *Service) StartTicker(duration time.Duration) {
 
 			//Publish to queue
 			signalBus := service.app.GetSignalBus()
-			signalBus.Emit(channel, []byte(strconv.FormatInt(now, 10)))
+			signalBus.Emit("timer.ticker", []byte(strconv.FormatInt(now, 10)))
 			old = now
 		}
 	}
