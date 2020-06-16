@@ -6,7 +6,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 
-	app "timer-atomic-clock/app"
+	app "vibration-atomic-clock/app"
 )
 
 func init() {

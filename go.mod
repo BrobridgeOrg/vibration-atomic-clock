@@ -1,4 +1,4 @@
-module timer-atomic-clock
+module vibration-atomic-clock
 
 go 1.13
 

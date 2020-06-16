@@ -3,9 +3,9 @@ package app
 import (
 	"strconv"
 
-	app "timer-atomic-clock/app/interface"
-	"timer-atomic-clock/app/signalbus"
-	ticker "timer-atomic-clock/services/ticker"
+	app "vibration-atomic-clock/app/interface"
+	"vibration-atomic-clock/app/signalbus"
+	ticker "vibration-atomic-clock/services/ticker"
 
 	log "github.com/sirupsen/logrus"
 	"github.com/sony/sonyflake"

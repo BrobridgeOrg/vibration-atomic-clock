@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"time"
 
-	app "timer-atomic-clock/app/interface"
+	app "vibration-atomic-clock/app/interface"
 
 	nats "github.com/nats-io/nats.go"
 	log "github.com/sirupsen/logrus"

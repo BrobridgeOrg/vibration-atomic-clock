@@ -1,4 +1,4 @@
-# Timer atomic-clock 
+# Vibration atomic-clock 
 
 The built-in atomic-clock  is used to process timer  from task manager.
 
