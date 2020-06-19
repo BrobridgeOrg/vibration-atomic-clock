@@ -55,7 +55,7 @@ func (service *Service) StartTicker(duration time.Duration) {
 	for {
 		select {
 		case <-service.ticker.C:
-			now := time.Now().Unix()
+			now := time.Now().UTC().Unix()
 			if now == old || now < old {
 				continue
 			}
