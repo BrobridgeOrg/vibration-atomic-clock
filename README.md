@@ -2,7 +2,8 @@
 
 The built-in atomic-clock  is used to process timer  from task manager.
 
-ha_mode maximal support 2 node.
+ha_mode ~~maximal support 2 node~~.
+Support more than two nodes, but two nodes is best.
 
 ## License
 
