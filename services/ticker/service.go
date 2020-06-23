@@ -11,8 +11,9 @@ import (
 )
 
 type Service struct {
-	app    app.AppImpl
-	ticker *time.Ticker
+	app       app.AppImpl
+	ticker    *time.Ticker
+	isRunning bool
 }
 
 func CreateService(a app.AppImpl) *Service {
@@ -21,6 +22,8 @@ func CreateService(a app.AppImpl) *Service {
 	service := &Service{
 		app: a,
 	}
+
+	service.isRunning = false
 
 	return service
 }
@@ -47,6 +50,10 @@ func (service *Service) RunTickerCluster() {
 
 func (service *Service) StartTicker(duration time.Duration) {
 
+	if service.isRunning {
+		return
+	}
+
 	// Start ticker
 	service.ticker = time.NewTicker(duration * time.Millisecond)
 	defer service.ticker.Stop()
@@ -64,6 +71,7 @@ func (service *Service) StartTicker(duration time.Duration) {
 			signalBus := service.app.GetSignalBus()
 			signalBus.Emit("timer.ticker", []byte(strconv.FormatInt(now, 10)))
 			old = now
+			service.isRunning = true
 		}
 	}
 
