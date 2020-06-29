@@ -2,11 +2,13 @@ package app
 
 import (
 	"strconv"
+	"time"
 
 	app "vibration-atomic-clock/app/interface"
 	"vibration-atomic-clock/app/signalbus"
 	ticker "vibration-atomic-clock/services/ticker"
 
+	nats "github.com/nats-io/nats.go"
 	log "github.com/sirupsen/logrus"
 	"github.com/sony/sonyflake"
 	"github.com/spf13/viper"
@@ -16,6 +18,7 @@ type App struct {
 	id        uint64
 	flake     *sonyflake.Sonyflake
 	signalbus *signalbus.SignalBus
+	isReady   bool
 }
 
 func CreateApp() *App {
@@ -29,14 +32,37 @@ func CreateApp() *App {
 
 	idStr := strconv.FormatUint(id, 16)
 
-	return &App{
+	a := &App{
 		id:    id,
 		flake: flake,
-		signalbus: signalbus.CreateConnector(
-			viper.GetString("signal_server.host"),
-			idStr,
-		),
 	}
+
+	a.signalbus = signalbus.CreateConnector(
+		viper.GetString("signal_server.host"),
+		idStr,
+		func(natsConn *nats.Conn) {
+			for {
+				log.Warn("re-connect to signal server")
+
+				// Connect to NATS Server
+				err := a.signalbus.Connect()
+				if err != nil {
+					log.Error("Failed to connect to signal server")
+					time.Sleep(time.Duration(1) * time.Second)
+					continue
+				}
+
+				a.isReady = true
+
+				break
+			}
+		},
+		func(natsConn *nats.Conn) {
+			a.isReady = false
+		},
+	)
+
+	return a
 }
 
 func (a *App) Init() error {
